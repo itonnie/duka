@@ -40,9 +40,7 @@ router.get('/products/:category', (req, res, next) => {
         if(err) {
             console.log(err);
         } else {
-            res.json({
-                result
-            });
+            res.send(result);
         }
     });
 });
