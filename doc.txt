@@ -1,0 +1,9 @@
+
+
+GET /users
+GET /products:cartegory
+GET /products
+GET /admins
+GEt /removeadmin/:id
+POST /addproduct
+POST /removeproduct
