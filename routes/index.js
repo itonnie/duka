@@ -41,7 +41,7 @@ router.get('/products/:category', (req, res, next) => {
             console.log(err);
         } else {
             res.json({
-                data: result
+                result
             });
         }
     });
