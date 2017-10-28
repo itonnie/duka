@@ -3,12 +3,15 @@ var User = require('../models/user');
 var Admin = require('../models/admin');
 var Product = require('../models/product');
 var Sales = require('../models/sales');
+var path = require("path");
 
 var router = express.Router();
 
+/*
 router.get('/', (req, res, next) => {
     //serve admin SPA page
-});
+    res.sendFile(path.resolve(__dirname, "../public", "index.html"));
+}); */
 
 //return a list of all users who use the app
 router.get('/users', (req, res, next) => {

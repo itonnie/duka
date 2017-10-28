@@ -5,6 +5,10 @@ var Sales = require('../models/sales');
 
 var router = express.Router();
 
+router.get('/', (req, res, next) => {
+    res.sendFile('index.html');
+})
+
 //returns a custom list of todays picks
 router.get('/promotions', (req, res, next) => {
     //find all products with offers
