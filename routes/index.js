@@ -2,6 +2,8 @@ var express = require("express");
 var User = require("../models/user");
 var Product = require('../models/product');
 var Sales = require('../models/sales');
+var request = require("request");
+var jwt = require("jsonwebtoken");
 
 var router = express.Router();
 
@@ -37,7 +39,7 @@ router.get('/promotions', (req, res, next) => {
 });
 
 //returns all products matching the category passed in
-router.get('/products/:category', (req, res, next) => {
+router.get('/products/:category', ensureToken, (req, res, next) => {
     var category = req.params.category;
 
     Product.find({ category: category }, (err, result) => {
@@ -175,5 +177,112 @@ router.post('/purchase', (req, res, next) => {
     });
     
 });
+
+
+router.post('/verifyphone', (req, res, next) => {
+    var phone = req.body.phone;
+    if(isNaN(phone) == true) {
+        //this is not a number
+        res.json({
+            ok: false,
+            message: "Please enter a phone number."
+        })
+    } else if(phone.length > 10 || phone.length < 10) {
+        //this is not a phone number
+        res.json({
+            ok: false,
+            message: "Please enter a valid phone number with 10 numerals."
+        })
+    } else {
+        var params = {
+            "user-id": "onejohi",
+            "api-key": "xCxLWEOHzTXgkWWF0kVy0L5h9FxdTpHFa9y86kXi8jcoK2QF",
+            "number": "+254" + phone,
+            "code-length": 6
+        };
+
+        request.post("https://neutrinoapi.com/sms-verify", {form: params}, (err, response, body) => {
+            if(err) {
+                res.json({
+                    ok: false,
+                    message: "An error was encountered while trying to verify phone number",
+                    errmsg: err
+                });
+            } else {
+                var result = JSON.parse(body);
+                res.json({
+                    ok: true,
+                    data: result
+                });
+            }
+        })
+    }
+});
+
+router.post('/verifycode', (req, res, next) => {
+    var code = req.body.code;
+    var phone = req.body.phone;
+
+    if(isNaN(code) == true) {
+        res.json({
+            ok: false,
+            message: "Please enter a valid security code"
+        });
+    } else if(code == null || code == undefined || code == "") {
+        res.json({
+            ok: false,
+            message: "We are recieving an empty code from you, that's all we know at the moment."
+        });
+    } else if(code.length != 6) {
+        res.json({
+            ok: false,
+            message: "Code is either too long or too short, max is 6."
+        });
+    } else {
+        var params = {
+            "user-id": "onejohi",
+            "api-key": "xCxLWEOHzTXgkWWF0kVy0L5h9FxdTpHFa9y86kXi8jcoK2QF",
+            "security-code": code
+        };
+
+        request.post("https://neutrinoapi.com/verify-security-code", {form: params}, (err, response, body) => {
+            if(err) {
+                res.json({
+                    ok: false,
+                    message: "An error occured trying to verify your security code",
+                    errmsg: err
+                });
+            } else {
+                var data = JSON.parse(body);
+
+                if(data.verified == true) {
+                    var token = jwt.sign({ phone: phone }, "secretestkey");
+
+                    res.json({
+                        ok: true,
+                        token: token
+                    })
+                } else {
+                    res.json({
+                        ok: false,
+                        message: "Number may not be valid. Verification failed for this number. Contact Customer Care."
+                    });
+                }
+            }
+        })
+    }
+});
+
+function ensureToken(req, res, next) {
+    var bearerHeader = req.headers["authorization"];
+    if(typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(" ");
+        var bearertoken = bearer[1];
+        req.token = bearertoken;
+        next();
+    } else {
+        res.sendStatus(403);
+    }
+}
 
 module.exports = router;

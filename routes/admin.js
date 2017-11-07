@@ -157,33 +157,10 @@ router.post('/addproduct', (req, res, next) => {
                 }
             })
         } else if(result) {
-        
-            /*var newquant = Number(result.quantity) + Number(quantity);
-            
-
-            Product.findOneAndUpdate({barcode: barcode }, {quantity: newquant}, (err, result) => {
-                if(err) {
-                    console.log(err);
-                } else {
-                    Product.findOne({barcode: barcode}, (err, response) => {
-                        if(err) {
-                            console.log(err);
-                        } else {
-                            res.json({
-                                ok: true,
-                                type: "Update",
-                                result: response
-                            });
-                        }
-                    });
-                }
-            }); */
-
             res.json({
                 ok: false,
                 message: "Product aleady exists, go to product tab and look for " + result.name + " to add more quantity."
             });
-
         }
 
     });
@@ -204,10 +181,16 @@ router.post('/removeproduct', (req, res, next) => {
             if(err) {
                 console.log(err);
             } else {
-                res.json({
-                    ok: true,
-                    result: result
-                });
+                Product.find((err, result) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        res.json({
+                            ok: true,
+                            result: result
+                        });
+                    }
+                })
             }
         })
 
