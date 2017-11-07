@@ -111,6 +111,8 @@ router.post('/purchase', (req, res, next) => {
 router.post("/verifyphonet", (req, res, next) => {
     var phone = req.body.phone;
 
+    Number(phone);
+    
     res.json({
         ok: true,
         security_code: 232323,
