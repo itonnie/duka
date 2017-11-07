@@ -112,7 +112,7 @@ router.post("/verifyphonet", (req, res, next) => {
     var phone = req.body.phone;
 
     Number(phone);
-    
+
     res.json({
         ok: true,
         security_code: 232323,
@@ -124,14 +124,8 @@ router.post("/verifyphonet", (req, res, next) => {
 
 router.post('/verifyphone', (req, res, next) => {
     var phone = req.body.phone;
-    Number(phone);
-    if(isNaN(phone) == true) {
-        //this is not a number
-        res.json({
-            ok: false,
-            message: "Please enter a phone number."
-        })
-    } else if(phone.length > 10 || phone.length < 10) {
+    
+    if(phone.length > 10 || phone.length < 10) {
         //this is not a phone number
         res.json({
             ok: false,
@@ -141,7 +135,7 @@ router.post('/verifyphone', (req, res, next) => {
         var params = {
             "user-id": "onejohi",
             "api-key": "xCxLWEOHzTXgkWWF0kVy0L5h9FxdTpHFa9y86kXi8jcoK2QF",
-            "number": "+254" + phone,
+            "number": "+254" + Number(phone),
             "code-length": 6
         };
 
