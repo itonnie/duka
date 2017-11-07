@@ -108,6 +108,17 @@ router.post('/purchase', (req, res, next) => {
     
 });
 
+router.post("/verifyphonet", (req, res, next) => {
+    var phone = req.body.phone;
+
+    res.json({
+        ok: true,
+        security_code: 232323,
+        sent: true,
+        number_valid: true
+    });
+})
+
 router.post('/verifyphone', (req, res, next) => {
     var phone = req.body.phone;
     Number(phone);
@@ -149,9 +160,6 @@ router.post('/verifyphone', (req, res, next) => {
                     sent: true,
                     message: "Successful"
                 });
-
-                console.log(result["code"]);
-                console.log("Hello")
             }
         })
     }

@@ -5,6 +5,7 @@ var cors = require("cors");
 var path = require("path");
 
 mongoose.connect('mongodb://onejohi:lisanjeri@ds113825.mlab.com:13825/duka');
+
 //mongoose.connect('mongodb://localhost:27017/duka');
 
 var app = express();
