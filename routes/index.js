@@ -39,7 +39,7 @@ router.get('/promotions', (req, res, next) => {
 });
 
 //returns all products matching the category passed in
-router.get('/products/:category', ensureToken, (req, res, next) => {
+router.get('/products/:category', (req, res, next) => {
     var category = req.params.category;
 
     Product.find({ category: category }, (err, result) => {
