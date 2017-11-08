@@ -166,19 +166,16 @@ router.post('/verifycode', (req, res, next) => {
     var code = req.body.code;
     var phone = req.body.phone;
 
-    if(isNaN(code) == true) {
+    if(code == null || code == undefined || code == "") {
         res.json({
             ok: false,
-            message: "Please enter a valid security code"
-        });
-    } else if(code == null || code == undefined || code == "") {
-        res.json({
-            ok: false,
+            token: undefined,
             message: "We are recieving an empty code from you, that's all we know at the moment."
         });
     } else if(code.length != 6) {
         res.json({
             ok: false,
+            token: undefined,
             message: "Code is either too long or too short, max is 6."
         });
     } else {
